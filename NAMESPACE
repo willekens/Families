@@ -1,0 +1,6 @@
+import ("msm")
+importFrom("stats", "aggregate", "rbinom", "runif", "uniroot")
+importFrom("utils", "str")
+importFrom("reshape","melt.data.frame")
+
+export("Db", "Dd", "e0", "IDpartner","IDch", "IDfather", "IDmother","IDgch","Multistate")

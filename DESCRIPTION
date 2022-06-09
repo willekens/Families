@@ -1,0 +1,17 @@
+Package: Families
+Type: Package
+Title: Construct Family Relationships in a Virtual Population Produced by VirtualPop Package
+Version: 1.0
+Imports: msm,reshape
+Suggests: knitr, rmarkdown,ggplot2,lubridate,xml2
+BuildResaveData: best
+VignetteBuilder: knitr
+LazyData: true
+Date: 2022-06-05
+Author: Frans Willekens
+Maintainer: Frans Willekens <willekens@nidi.nl>
+Description: Tools to study grandparenthood, double burden (presence of children and oldest old parents), and kinship networks in virtual population produced by VirtualPop.
+License: GPL-2
+NeedsCompilation: no
+Encoding: UTF-8
+RoxygenNote: 7.1.2
