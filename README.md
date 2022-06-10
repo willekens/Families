@@ -4,6 +4,12 @@ $Families$ identifies family and kin relationships in a virtual population gener
 
 The multi-generation virtual population offers opportunities to map social (family) networks and to adopt different perspectives on population, including the perspective of a child or an elderly person. The vignette $Families\_Virtual$ describes the package and illustrates its use. HTML and pdf versions of the vignette are in folder $Families/doc$. 
 
+In the $doc$ folder, you find
+
+* pdf versions of the vignettes
+* package manual
+* R code used in vignettes
+
 You should be able to install VirtualPop using the following R code: 
 ```{r}
         library(devtools)
