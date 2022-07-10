@@ -1,156 +1,142 @@
 ---
-title: "Families and Kinship Networks in a Virtual Population. The $Families$ package."
+title: "Families and Kinship Networks in Virtual Populations. The 'Families' package."
 author: "Frans Willekens"
-date: "2022-06-08"
-output: html_document
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    df_print: paged
+    toc: TRUE
+    number_sections: true
 bibliography: References.bib
-csl: "demography.csl"
+csl: demography.csl
 vignette: |
-  %\VignetteIndexEntry{Families and Kinship Networks in a Virtual Population. The $Families$ package.} 
-  %\VignetteEngine{knitr::rmarkdown} 
   %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Families and Kinship Networks in Virtual Populations. The 'Families' package.}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
-## Introduction
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+# Introduction
 
-A multi-generation virtual population offers an opportunity to study family ties and kinship networks. Individuals with social ties constitute a social network. A *holistic perspective* on a network concentrates on network characteristics. An *egocentric* perspective concentrates on network ties of a reference person or focal individual, called *ego*. Ego may be a member of the oldest generation, the youngest generation, or an intermediate generation. That leads to different perspectives on population. If ego is a member of the oldest generation in a four-generation population, ego's perspective is that of a parent, a grandparent and a great-grandparent. If, on the other hand, ego is a member of the youngest generation, the perspective is that of a child, grandchild and great-grandchild. Members of an intermediate generation are both parents and children. Some of these members may go through a stage of life with old parents and young children and experience the double-burden of caring for parents and children. The multi-generation virtual population offers unique opportunities to study aspects of family demography that did not receive much attention until recently: (a) the study of the population from a child's perspective, (b) the demography of grandparenthood (perspective of the elderly), and (c) the double burden experienced by the sandwich generation. 
+Families are social networks of related individuals belonging to different generations. A social network may be approached from a *holistic perspective*, which concentrates on network characteristics, or an *egocentric* perspective, which concentrates on network ties of a reference person or focal individual, called *ego*. Ego may be a member of the oldest generation, the youngest generation, or an intermediate generation. That leads to different perspectives on population. If ego is a member of the oldest generation, ego's perspective is that of a parent, a grandparent and a great-grandparent. If, on the other hand, ego is a member of the youngest generation, the perspective is that of a child, grandchild and great-grandchild. Members of an intermediate generation are both parents and children. Some of these members may go through a stage of life with old parents and young children and experience the double-burden of caring for parents and children. To study family ties from different perspectives, simulation is often used. Simulation produces a virtual population that mimics a real population. The multi-generation virtual population offers unique opportunities to study aspects of family demography that did not receive much attention until recently: (a) the study of the population from a child's perspective, (b) the demography of grandparenthood (perspective of the elderly), and (c) the double burden experienced by the sandwich generation. 
 
-A few studies on the three subjects listed exist. The studies predominantly use microsimulation and SOCSIM is the most popular software package. SOCSIM creates individual life histories and genealogies from age-specific mortality and fertility rates [@wachter1997testing]. The microsimulation method is similar to the one used in the $VirtualPop$ package to generate a virtual population. In $VirtualPop$ simulation proceeds in continuous time^[In SOCSIM, the simulation proceeds month by month and events scheduled in a month are executed in random order [@wachter1997testing, p. 93]. In the Modgen microsimulation package developed by Statistics Canada, simulations proceeds in continuous time (for a brief description, see @belanger2017microsimulation [pp. 14ff]).] Microsimulation in continuous time has two important advantages [@willekens2017continuous]. First, no two events can occur in the same interval, which resolves the issue of event sequence that requires the user to determine which event comes first and which second. Second, the exact duration between events can be computed. @wolf1994elderly, @arpino2018family, @margolis2016changing, @margolis2019cohort and others adopt the perspective of the elderly, and raise issues such as the presence of children and grandchildren, the number of grandchildren, the timing of grandparenthood, the duration of grandparenthood, and the age of grandchildren at a particular moment in a grandparent’s life. The perspective of children is rarely adopted in demography [@mills2021population, p. 20]. A child interprets demography as the presence of parents, grandparents, siblings and peers. @lam2008stages and @verdery2015links adopt the perspective of a child to interpret demographic change. Using survey data, @bumpass2000trends study the children’s family contexts in the United States. The double burden was recently studied by @alburez2021sandwich. The authors uses microsimulation to study the double burden in countries around the world. The input data consist of mortality and fertility rates of 198 countries and territories included in the 2019 Revision of the UNWPP. The input data cover the period 1950-2100. The output is a complete kinship network for the 1970–2040 birth cohorts from which it is possible to determine the time each simulated individual spent sandwiched as a parent and grandparent. The authors conclude that "Demographic microsimulation allowed us to overcome the lack of international and comparable data on past, present, and future kinship structures."  
+The three subjects listed are receiving a growing attention in the demographic literature. The dominant method of analysis is microsimulation and SOCSIM is the software package of choice. SOCSIM creates individual life histories and genealogies from age-specific mortality and fertility rates [@wachter1997testing]. 'VirtualPop', a simulation package in R [@Willekens2022package], uses a similar method to produce individual life histories and genealogies in multigeneration populations. There is an important difference, however: simulation proceeds in continuous time. Microsimulation in continuous time has two important advantages [@willekens2009continuous]. First, no two events can occur in the same interval, which resolves the issue of event sequence that requires the user to determine which event comes first and which second. In SOCSIM, the simulation proceeds month by month and events scheduled in a month are executed in random order [@wachter1997testing, p. 93]^[In the Modgen microsimulation package developed by Statistics Canada, simulations proceeds in continuous time (for a brief description, see @belanger2017microsimulation [pp. 14ff]).]. Second, the duration between events can be computed exactly, not approximately. 
 
-Note that the life histories of members of the virtual population produced by $VirtualPop$ are not projections or forecasts. They are the life histories and genealogies that would result if the individuals in successive generations experience the same mortality and fertility. The demographic indicators computed from the histories convey information on the actually observed mortality and fertility rates, unless the rates are programmed to change in time. A virtual population is analogous to a stable population. In demography, stable population theory is used to assess the long-term consequences of sets of age-specific fertility and mortality rates, and rates of transition between living states. In the long run, life history characteristics and population characteristics coincide (ergodicity theorem). The same theorem applies to a multi-generation virtual population that results from a set of age-specific fertility and mortality rates, and rates of transition between living states. In the long run, i.e. after a large number of generations, life history characteristics and population characteristics coincide. 
+Microsimulation is often used to study subjects that cannot be studied easily otherwise. @wolf1994elderly, @arpino2018family, @margolis2016changing, @margolis2019cohort and others adopt the perspective of the elderly, and raise issues such as the presence of children and grandchildren, the number of grandchildren, the timing of grandparenthood, the duration of grandparenthood, and the age of grandchildren at a particular moment in a grandparent’s life. A second subject is population structure and demographic change from the perspective of children.  A child interprets demography as the presence of parents, grandparents, siblings and peers. The perspective of children is rarely adopted in demography [@mills2021population, p. 20]. @lam2008stages and @verdery2015links adopt the perspective of a child to interpret demographic change. Using survey data, @bumpass2000trends study the children’s family contexts in the United States. The third subject is the double burden of child care and elderly care. The double burden was recently studied by @alburez2021sandwich. The authors used mortality and fertility rates of 198 countries and territories included in the 2019 Revision of the UNWPP and the period 1950-2100 to estimate the time spent caring for as child (and grandchild) and an elderly parent. The output is a complete kinship network for the 1970–2040 birth cohorts from which it is possible to determine the time each simulated individual spent sandwiched as a parent and grandparent. The authors conclude that "Demographic microsimulation allowed us to overcome the lack of international and comparable data on past, present, and future kinship structures."  
 
-The purpose of the vignette is to shown how to navigate the multi-generation virtual population database to extract demographic information of direct interest to aspects of family demography listed above. The desired information is extracted using queries in R.
+The purpose of the vignette is to shown how to navigate the multi-generation virtual population database to extract demographic information of direct interest to aspects of family demography listed above. The desired information is extracted using queries, formulated as R functions. The code uses subsetting, which is a feature of vectorised operations. Most of the functions in R are vectorised, which means that a function operates on all elements of a vector simultaneously. Vectorized operations prevent the loops that makes R slow^[The simulation of the fertility careers of 50,000 women, their daughters, granddaughters and great-granddaughters takes about 2 minutes on a MacBook.].
 
-This document consists of three sections in addition to the introduction. The next section consists of five subsections. The first Is a very brief introduction to $VirtualPop$. The second presents six basic queries. They are sufficient to produce kinship networks. The other subsections illustrate the use of the queries to obtain information on the kin of ego: siblings, cousins and aunts. The third section zooms in on grandparenthood. It illustrates how the basic queries may be used to answer questions about grandparenthood, such as age at onset and duration. The last section concentrates on the double burden. It addresses questions such as age at onset and termination, and the proporition of people who experience a double burden. 
+This document consists of eight sections in addition to the introduction. The next section is a very brief introduction to 'VirtualPop'. Section three presents six basic queries. They are sufficient to retrieve families ties and produce kinship networks. Section four combines the basic functions in queries to obtain information on the kin of ego: siblings, cousins and aunts. The fifth section zooms in on grandparenthood. It illustrates how the basic queries may be used to answer questions about grandparenthood, such as age at onset and duration. Section six concentrates on the double burden. It addresses questions such as age at onset and termination, and the proportion of people who experience a double burden. The last section presents the fertility table, which is a multistate life table of fertility histories. The application of the basic functions, alone or in combination, to extract desired information on families and kinships in the virtual population may be labeled *kinship calculus*. 
 
-## Retrieve family ties
+# The 'VirtualPop' package
 
-### The $VirtualPop$ package
+The 'VirtualPop' package generates a multi-generation virtual population. You select the number of generations and the size of the first generation (generation 1). The sizes of the other generations depend on the fertility rates. For each individual in the virtual population, the lifespan and the fertility history from death are generated by sampling age-at-death distributions implicit in the death rates by age (single years of age) and sex included in the Human Mortality Database (HMD) and the time-to-event (waiting time) distributions implicit in the fertility rates by age and birth order. Rates may be downloaded from the Human Fertility Database (HFD). 'VirtualPop' uses *conditional fertility rates* (in HFD parlance). They are more widely known as occurrence-exposure rate. For details, see the tutorial and the other vignettes included in the 'VirtualPop' package.
 
-The $VirtualPop$ package generates a virtual population of given size and number of generations from death rates by age (single years of age) and sex, and fertility rates by age and birth order. Rates may be downloaded from the Human Mortality Database (HMD) and the Human Fertility Database (HFD). In the HFD, the rates $VirtualPop$ uses are called *conditional fertility rates*. For details, see the vignettes included in the $VirtualPop$.  
+Note that the life histories of members of the virtual population produced by 'VirtualPop' are not projections or forecasts. They are the life histories and genealogies that would result if the individuals in successive generations experience the same mortality and fertility. The demographic indicators computed from the histories convey information on the actually observed mortality and fertility rates, unless the rates are programmed to change in time. A virtual population is analogous to a stable population. In demography, stable population theory is used to assess the long-term consequences of sets of age-specific fertility and mortality rates, and rates of transition between living states. In the long run, life history characteristics and population characteristics coincide (ergodicity theorem). The same theorem applies to a multi-generation virtual population that results from a set of age-specific fertility and mortality rates, and rates of transition between living states. In the long run, i.e. after a large number of generations, life history characteristics and population characteristics coincide. 
 
-The fertility and mortality rates of the United States in the calendar year 2019 and the virtual population generated from these rates are included in the data folder of the $Families$ package. To load the virtual population, the following code is used:
-
-```r
+The fertility and mortality rates of the United States in the calendar year 2019 and the virtual population generated by the 'VirtualPop' from these rates are included in the data folder of the 'Families' package. To list the datasets in the package, type $data(package = 'Families')$. To attach the package and to load the data, the following code is used:
+```{r}
+# Attach the package to the search path
 library (Families)
-data(dataLH)
-dLH <- dataLH
+# Load the data in your workspace (environment:R_GlobalEnv)
+data(dataLH_F,package = 'Families')
+data(rates,package = 'Families')
+
+dLH <-  dataLH_F
+# Number of generations in the dataset
 ngen <- max(unique (dLH$gen))
 ```
 
-The virtual population consists of 30151 individuals belonging to 4 generations. The following table shows the number of individuals by generation and sex:
+Note that the virtual population in $dLH$ differs from the data file distributed with "VirtualPop$ due to randomness. The virtual population is produced from the same rates, but with a different random seed. The virtual population consists of `r nrow(dLH)` individuals belonging to `r ngen` generations. The following table shows the number of individuals by generation and sex:
 
-
-```r
-addmargins(table (Generation=dataLH$gen,Sex=dataLH$sex))
+```{r}
+addmargins(table (Generation=dLH$gen,Sex=dLH$sex))
 ```
 
-```
-##           Sex
-## Generation  Male Female   Sum
-##        1    5029   4971 10000
-##        2    4128   4121  8249
-##        3    3241   3365  6606
-##        4    2614   2682  5296
-##        Sum 15012  15139 30151
-```
+# Basic functions to navigate the virtual population database
 
-### Basic functions
-
-The key to retrieve information on a reference person or multiple reference persons is the individual identification number (ID). The ID of a reference person is denoted by $IDego$ or $idego$. Since R treats a scalar as a vector, a request for information on a single reference person or on a group of reference persons is treated similarly. $IDego$ (and $idego$) is a vector of reference persons. To retrieve data on an individual's social network (kinship network), the $Families$ package includes four basic functions to navigate the virtual population database. They retrieve the IDs of mother, father, partner and children. A combination of basic functions retrieves the IDs of siblings, aunts, uncles and cousins. In addition to these four functions, two basic functions return dates. In multi-generation populations, working with dates is more convenient than working with ages. The six functions are:
+The key to retrieve information on a reference person or multiple reference persons is the individual identification number (ID). The ID of a reference person is denoted by $IDego$ or $idego$. Since R treats a scalar as a vector, a request for information on a single reference person or on a group of reference persons is treated similarly. $IDego$ (and $idego$) is a vector of reference persons. In case of a single reference person, the vector consists of a single element. To retrieve data on an individual's social network (kinship network), the 'Families' package includes four basic functions to navigate the virtual population database. They retrieve the IDs of mother, father, partner and children. A combination of basic functions retrieves the IDs of siblings, aunts, uncles and cousins. In addition to these four functions, two basic functions return dates. In multi-generation populations, working with dates is more convenient than working with ages. The six functions are:
 
 *	$IDmother(idego)$ retrieves the ID of ego’s mother.
 *	$IDfather(idego)$ the ID of ego’s father
+*	$IDpartner(idego)$ retrieves the ID of ego’s partner.
 *	$IDch(idego)$ retrieves the IDs of ego’s children
-*	$IDpartner(idego)$ retrieves the ID of ego’s partner. 
 *	$Db(idego)$ retrieves the decimal date of birth
 *	$Dd(idego)$ retrieves the decimal date of death
 
-A seventh function is added for convenience:
-
-* $IDgch(idego)$ retrieves the ID of ego's grandchildren 
-
 Ego’s age at an event is the date of birth minus the date of the event. For instance, the age at death is the date of birth minus the date of death: $Db(idego)-Dd(idego)$. 
 
-The functions may be used in combination. For instance, the function call $IDmother(IDmother(idego))$ gives the ID of ego’s grandmother and $IDmother(IDmother(IDmother(idego)))$ retrieves the ID of ego’s great-grandmother. If an individual for which information is requested is not included in the database, the missing value indicator NA is returned. The query $IDfather(IDmother(idego)))$ returns the ID of ego’s maternal grandfather and $IDfather(IDfather(idego)))$ returns the ID of the paternal grandfather. The function call $IDch(IDch(idego))$ returns the IDs of ego’s grandchildren, and $IDch(IDch(IDch(idego)))$ the IDs of the great-grandchildren. 
+To retrieve information on kin other than members of the nuclear family, the basic functions are combined. For instance, the function call $IDmother(IDmother(idego))$ gives the ID of ego’s grandmother and $IDmother(IDmother(IDmother(idego)))$ retrieves the ID of ego’s great-grandmother. If an individual for which information is requested is not included in the database, the missing value indicator NA is returned. The query $IDfather(IDmother(idego)))$ returns the ID of ego’s maternal grandfather and $IDfather(IDfather(idego)))$ returns the ID of the paternal grandfather. The function call $IDch(IDch(idego))$ returns the IDs of ego’s grandchildren, and $IDch(IDch(IDch(idego)))$ the IDs of the great-grandchildren. 
 
-By way of illustration, let's retrieve the data on three individuals and on their maternal ancestors. The individuals are ID 270923, 211892 and 227091. The retrieval of information on ancestors requires (a) retrieval of the IDs of the ancestors and (b) retrieval of the individual records of these persons. Calling the function $IDmother()$ does not guarantee that the desired function is called. 
-The Comprehensive R Archive Network (CRAN) has about 20 thousand contributed packages. Some of these packages may have function called $IDmother$. To ensure that the correct function is accessed, the double colon operator is used. The second line of the code chunk that follows ensures that $IDmother$ accessed the function by that name in the package $Families$ and not in any other package. 
+The names of the basic functions may not be unique to 'Families'. Other packages included in the Comprehensive R Archive Network (CRAN) may have function by the same name. CRAN has about 20 thousand contributed packages. To ensure that $IDmother$ and the other basic functions attached during the computations are from 'Families' and not from another package in the archive, the double colon operator is used. The second line of the code chunk that follows ensures that $IDmother$ of the package 'Families' is attached and not a function by the same name in another package. 
 
-```r
-idego <- c(27023,21192,22091)
-IDmother <- Families::IDmother 
-dataLH[c(idego,IDmother(idego,dLH),IDmother(IDmother(idego,dLH),dLH)),]
+In the remainder of this section, information is retrieved on mothers, grandmothers, children and grandchildren.
+
+## Mothers and grandmothers
+
+By way of illustration, let's retrieve the data on three individuals, their mother and maternal grandmother. Before doing that, the functions of the 'Families' package, which are in the package environment, are copied to the workspace, which is the global environment. 
+
+```{r}
+# Create local copies of the functions (in workspace)
+IDmother <- Families::IDmother
+IDfather <- Families::IDfather
+IDpartner <- Families::IDpartner
+IDch <- Families::IDch
+Db <- Families::Db
+Dd <- Families::Dd
 ```
 
+The individuals are selected at random from members of the third generation. The retrieval of information on mother and grandmother requires the retrieval of (a) the IDs of mother and grandmother, and (b) the individual records of these persons. The code is: 
+```{r}
+base::set.seed(30)
+idego <- sample (dLH$ID[dLH$gen==3],3)
+z <- dLH[c(idego,IDmother(idego),IDmother(IDmother(idego))),]
+rownames(z) <- NULL
+z[,1:9]
 ```
-##          ID gen    sex   bdated   ddated      x_D IDpartner IDmother IDfather jch nch  id.1  id.2  id.3  id.4  id.5
-## 27023 27023   4   Male 2109.480 2190.310 80.83073     26399    20964    23418   2   5 31477 31478 31479 31480 31481
-## 21192 21192   3   Male 2083.063 2170.194 87.13041     18516    13627    12671   1   3 25065 25066 25067    NA    NA
-## 22091 22091   3 Female 2087.941 2174.731 86.79000     20409    14680    16787   1   0    NA    NA    NA    NA    NA
-## 20964 20964   3 Female 2086.981 2164.006 77.02485     24399    13380    16674   1   5 27022 27023 27024 27025 27026
-## 13627 13627   2 Female 2050.956 2130.608 79.65232     10266     4359     8614   4   2 21192 21193    NA    NA    NA
-## 14680 14680   2 Female 2052.817 2137.734 84.91654     13805     5710     6490   2   2 22091 22092    NA    NA    NA
-## 13380 13380   2 Female 2056.450 2144.801 88.35127     10503     4058     5150   1   2 20964 20965    NA    NA    NA
-## 4359   4359   1 Female 2019.580 2099.901 80.32104      3237       NA       NA  NA   4 13624 13625 13626 13627    NA
-## 5710   5710   1 Female 2019.683 2105.420 85.73782      5178       NA       NA  NA   2 14679 14680    NA    NA    NA
-##       id.6 id.7 id.8 id.9    age.1    age.2    age.3    age.4    age.5 age.6 age.7 age.8 age.9
-## 27023   NA   NA   NA   NA       NA       NA       NA       NA       NA    NA    NA    NA    NA
-## 21192   NA   NA   NA   NA       NA       NA       NA       NA       NA    NA    NA    NA    NA
-## 22091   NA   NA   NA   NA       NA       NA       NA       NA       NA    NA    NA    NA    NA
-## 20964   NA   NA   NA   NA 21.88270 22.49865 24.72482 26.36746 36.04109    NA    NA    NA    NA
-## 13627   NA   NA   NA   NA 32.10764 32.97360       NA       NA       NA    NA    NA    NA    NA
-## 14680   NA   NA   NA   NA 35.12382 35.14795       NA       NA       NA    NA    NA    NA    NA
-## 13380   NA   NA   NA   NA 30.53106 32.87715       NA       NA       NA    NA    NA    NA    NA
-## 4359    NA   NA   NA   NA 25.56604 30.14332 31.32168 31.37614       NA    NA    NA    NA    NA
-## 5710    NA   NA   NA   NA 24.35204 33.13458       NA       NA       NA    NA    NA    NA    NA
-```
-For each individual selected, the table includes information on the individual, the ID of the partner, the ID of the mother and father (if their generation is included in the virtual population), the number of children during her lifetime (nch), the IDs of the children and the ages of the mother at childbearing. The first individual has 5 children. The IDs of the children are $r dataLH[27023,(12:(11+dataLH$nch[27023]))]`. To list the IDs of egos and ancestors, the function call is: 
-
-```r
-IDmother(IDmother(idego,dLH,keep_ego=TRUE),dLH)
+The three individuals selected have IDs `r idego`. The first three records contain data on the reference persons. Records 4-6 have data on the mothers of the reference persons and records 7-9 have data on the grandmothers. For each individual, the table includes ID of the individual, generation, sex, date of birth, date of death and age of death. In addition, it includes the ID of the partner, and the IDs of the mother and father (if their generation is included in the virtual population). Individual records also include the birth order of the individual and  data on her or his children: the number of children (nch), the IDs of the children and the ages of the mother at childbearing. In this R R chunk, the information is limited to the first 3 children:
+```{r}
+z[,c(10:14,21:23)]
 ```
 
-```
-##    IDgm IDmother IDego
-## 1 13380    20964 27023
-## 2  4359    13627 21192
-## 3  5710    14680 22091
-```
-The second argument of the function instructs the function to keep the IDs of ego and ego’s mother. For an explanation of the code, see the description of the function $IDmother$. The variable IDgm denotes the ID of the grandmother of ego. 
+The second individual has `r z$nch[2]` children. The ID of the children are `r as.numeric(round (dLH[1802,(12:(11+dLH$nch[1802]))],0))` and the age of the mother at birth of the child is `r as.numeric(round(dLH[1802,(21:(20+dLH$nch[1802]))],2))` years. 
 
-The IDs of the women in generation 1 of the virtual population entering motherhood are
+To list the IDs of egos, their mothers and grandmothers, the function call is: 
+```{r}
+IDmother(IDmother(idego,keep_ego=TRUE))
+```
+with IDgm the ID of the grandmother of ego. The second argument of the function instructs the function to keep the IDs of ego and ego’s mother. For an explanation of the code, see the description of the function $IDmother()$ (by typing ?IDmother into the console).
 
-```r
+## Children and grandchildren
+
+Individual with ID 2 has 2 children and 2 grandchildren. The IDs of the grandchildren are:
+```{r}
+# Children
+IDch(id=2)
+# Grandchildren
+IDch(IDch(id=2))
+```
+
+Consider all women in generation 1 (4883 women) and let $idego$ denote the vector of IDs of the women. The IDs of women with children are:
+```{r}
 # Select all females in generation 1 
 idego <- dLH$ID[dLH$gen==1 & dLH$sex=="Female"]
-# IDs of women with children
-idm <- unique(IDmother(IDch(idego,dLH),dLH))
+# IDs of children
+idch <- IDch(idego)
+# IDs of mother with children
+idm <- unique(IDmother(idch))
 ```
-with idm the IDs of women with children. The IDs of women without children are $idego[idego%in%idm==FALSE]$. The proportion remaining childless is $1-length(idm)/length(idego)$, which gives 23.42 percent. The number of women in generation 1 by number of children is 
-
-```r
+with idm the IDs of women with children. 3751 women have children and 1132 remain childless. The IDs of women without children are retrieved by the typing $idego\left[idego\%in\%idm==FALSE\right]$. The proportion remaining childless is $1-length(idm)/length(idego)$, which gives `r round (100*(1-length(idm)/length(idego)),2)` percent. The number of women in generation 1 by number of children is 
+```{r}
 addmargins (table(dLH$nch[dLH$gen==1 & dLH$sex=="Female"]))
 ```
 
-```
-## 
-##    0    1    2    3    4    5    6  Sum 
-## 1164 1174 1507  700  238  119   69 4971
-```
-
-The IDs of the grandchildren of individual with ID 2 is
-
-```r
-IDgch(id=2,dataLH=dLH)
-```
-
-```
-##  [1] 18748 18749 18937 18938 18939 19320 20887 20888 20889 20985 20986 20987
-```
-
-For each woman in the generation 1, the ID of the oldest child is (for each ego, select child with lowest date of birth)
-
-```r
+The IDs of the oldest and youngest child in a family are relatively easily determined. The oldest child is the child with the lowest date of birth. For each woman in the generation 1, the ID of the oldest child is obtained as follows:
+```{r}
 idego <- dLH$ID[dLH$gen==1 & dLH$sex=="Female"]
 # ID of children
 idch <- IDch(idego,dLH)
@@ -164,38 +150,109 @@ colnames(ch_oldest) <- c("idego","ID of oldest child","date of birth of oldest c
 ```
 The object $ch\_oldest$ is a data frame with three columns. The first has the ID of the mother, the second the ID of the oldest child, and the third the date of birth of the oldest child. The first lines of $ch\_oldest$ are
 
-
-```
-##   idego ID of oldest child date of birth of oldest child
-## 1     2              10001                      2041.345
-## 2     3              10007                      2055.860
-## 3     5              10009                      2049.017
-## 4     7              10010                      2052.817
-## 5     8              10012                      2056.241
-## 6    11              10013                      2048.505
+```{r, echo=FALSE}
+head(ch_oldest)
 ```
 
-For each woman, the ID of the youngest child is
-
-```r
+For each woman with children, the ID of the youngest child is
+```{r}
 # Select, for each ego, child with highest date of birth
+#    zz has ID of all children and dates of birth of children. 
+#    They are used to select youngest child ever born (by mother)
 ch_youngest=aggregate(zz,list(dLH$IDmother[idch]),function(x) max(x))
-colnames(ch_youngest) <- c("idego","ID of youngest child","date of birth of youngest child")
+# Date of birth of mother
+ch_youngest$db_mother <- Db(ch_youngest[,1])
+# Age of mother at birth youngest child
+ch_youngest$agem_chLast <- ch_youngest[,3] - ch_youngest$db_mother
+colnames(ch_youngest) <- c("idego","ID_youngest_child","db_youngest_child","db_idego","agemLast")
 ```
-$ch\_youngest$ is a data frame with three columns: the ID of the mother, the ID of the youngest child and the date of birth of the youngest child. 
+$ch\_youngest$ is a data frame with five columns: the ID of the mother, the ID of the youngest child, the date of birth of the youngest child, the date of birth of the mother and the age of the mother at birth of the youngest child. The density distribution of the ages of mothers at birth of youngest child is:
+```{r}
+  xmin <- 10
+  xmax <- 50
+  library(ggplot2)
+  p <- ggplot(ch_youngest, aes(agemLast)) +  
+               geom_histogram(aes(y=..density..), alpha=0.5, position="identity",bins=50)+  
+               geom_density(alpha=0.2) +
+            scale_x_continuous(breaks=seq(xmin,xmax,by=5)) +
+            scale_y_continuous (breaks=seq(0,0.07,by=0.01)) +
+            labs(x="Age")
+  title <- paste ("Age of mother at birth of youngest child; ",attr(dLH,"country"),attr(dLH,"year") )
+  p <- p + ggtitle(title) +
+  theme(plot.title = element_text(size = 10, face = "bold"))
+  p
+```
 
-Consider women of the third generation. The age of ego at the 85th birthday of ego's mother:
+The mean age is `r round(mean(ch_youngest$agemLast),2)` years and the standard deviation is `r round(sd(ch_youngest$agemLast),2)` years. The median age at birth of the youngest child is $r round(median(ch_youngest$agemLast),2)` years. 
 
+## Child's perspective
 
-```r
+The age of a newborn's mother is the difference between the date of birth of the child and the date of birth of the mother. The age of a mother at a given reference age of a child is the age of the mother at birth of the child plus the reference age, provided the mother and the child are both alive at that age. Suppose we are interested in the age distribution of mothers of 10-year old children. A 10-year old is the reference person (ego). Consider females of generation 1. The IDs of mothers alive at ego's 10 birthday is:
+
+```{r}
+Status_refageEgo <- function(refage_ego)
+{ # IDs of egos (children)
+  idego <- IDch(dLH$ID[dLH$gen==1 & dLH$sex=="Female"])
+  # Is ego alive at reference age?
+  alive_ego <- Dd(idego) >= Db(idego) + refage_ego
+  # Number of children (ego) alive (=TRUE) and dead (=FALSE) at reference age
+  t1 <- table (alive_ego)
+  # IDs of egos alive at reference age
+  idegoRefage <- idego[alive_ego]
+  # Is mother alive at ego's reference age?
+  alive_m <- Dd(IDmother(idego)) >=  Db(idego) + refage_ego
+  # Number of mothers alive (=TRUE) or dead (=FALSE) at reference ages of egos
+  t2 <- table (alive_m)
+  aa <- list (idego=idego,
+              alive_ego=alive_ego,
+              alive_m=alive_m,
+              LivingStatus_ch_refage=t1,
+              LivingStatus_m_refage=t2)
+  return(aa)
+}
+refage_ego <- 10
+out <- Status_refageEgo (refage_ego)
+```
+The proportion of egos with a living mother at their 10th birthday is
+```{r}
+round (length(out$alive_m[out$alive_m]) / length(out$alive_ego),2)
+```
+
+The age distribution of mothers at reference age of children is:
+
+```{r}
+# Age of living mothers at refage of ego
+idegoRefage <-  out$idego[out$alive_ego]
+age_m <- (Db(idegoRefage) + refage_ego - Db(IDmother(idegoRefage)))[out$alive_m]
+mean(age_m)
+sd(age_m)
+hist(age_m,main=paste ("Age of living mother at age ",refage_ego," of ego",sep=""),breaks=40,xlab="Age of living mother")
+box()
+```
+
+The age distribution of living mothers at age 65 of children is:
+```{r}
+refage_ego <- 65
+out <- Status_refageEgo (refage_ego)
+# Age of living mothers at refage of ego
+idegoRefage <-  out$idego[out$alive_ego]
+age_m <- (Db(idegoRefage) + refage_ego - Db(IDmother(idegoRefage)))[out$alive_m]
+mean(age_m)
+sd(age_m)
+hist(age_m,main=paste ("Age of living mother at age ",refage_ego," of ego",sep=""),breaks=40,xlab="Age of living mother")
+box()
+```
+
+The age of a child at a given reference age of the mother is computed in a similar way. The age is the date of birth of the mother plus the reference age minus the date of birth of the mother, provided mother and child are alive. The age of ego at the 85th birthday of ego's mother and the age of ego at death of ego's mother (provided ego is alive at these ages) are:
+
+```{r}
 idego <- dLH$ID[dLH$gen==3 & dLH$sex=="Female"]
-age_m85 <- dLH$bdated[IDmother(idego,dLH)] + 85 - dLH$bdated[idego]
-age_md <- dLH$ddated[IDmother(idego,dLH)] - dLH$bdated[idego]
+age_m85 <- dLH$bdated[IDmother(idego)] + 85 - dLH$bdated[idego]
+age_md <- dLH$ddated[IDmother(idego)] - dLH$bdated[idego]
 d <- data.frame (idego,m85=age_m85,md=age_md)
 ```
 
-
-```r
+```{r}
 library (ggplot2)
 Plot_ages <- function (d)
 { # Age of ego at age 85 of mother and at death of mother
@@ -207,7 +264,8 @@ Plot_ages <- function (d)
                geom_histogram(aes(y=..density..), alpha=0.5, position="identity",bins=50)+  
                geom_density(alpha=0.2) +
             scale_x_continuous(breaks=seq(xmin,xmax,by=10)) +
-            scale_y_continuous (breaks=seq(0,0.07,by=0.01)) 
+            scale_y_continuous (breaks=seq(0,0.07,by=0.01)) +
+            xlab("Age")
   # Add median
   p <- p + theme(legend.position=c(0.76,0.99),legend.justification=c(0,1)) 
   title <- paste ("Age of ego at the 85th birthday of ego's mother and at death of mother; ",attr(dLH,"country"),attr(dLH,"year") )
@@ -218,203 +276,97 @@ Plot_ages <- function (d)
 Plot_ages(d)
 ```
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
-
 The number of years with a mother aged 85 and over is the mother's remaining number of years at age 85, provided the mother reaches 85. It is:
-
-```r
+```{r}
 # Age at death
 z <-  dLH$ddated[IDmother(idego,dLH)] - dLH$bdated[IDmother(idego,dLH)]
 alive <- z >=85
 duration <-  dLH$ddated[IDmother(idego,dLH)][alive] - (dLH$bdated[IDmother(idego,dLH)][alive] + 85)
 ```
-The mean duration is 7.65 years and the standard deviation is 4.99 years.
+The mean duration is `r round (mean(duration),2)` years and the standard deviation is `r round(sd(duration),2)` years.
 
-The proportion of mothers alive at age 65 of egos is:
+# Combinations of basic functions
 
+## Siblings
 
-```r
-refage <- 65
-# When does ego turn refage?
-ego_refage <- dLH$bdated[idego] + refage
-# Is mother alive at age 70 of ego?
-alive <- dLH$ddated[IDmother(idego,dLH)] >=ego_refage
-# Table of number of egos with mother alive (=TRUE) or dead (=FALSE)
-table (alive)
+### IDs of siblings
+  
+A combination of basic functions retrieves the IDs of sisters, brothers, aunts, uncles and cousins. Sisters and brothers of ego have the same mother and cousins have the same grandmother. Aunts and uncles are the siblings of ego’s mother and father. The IDs of ego's siblings are retrieved in two steps. First, the IDs of the children of ego's mother are retrieved. Next, the ID of ego is removed. 
+```{r}
+# select one individual of generation 3 who is third child of the family as ego
+idego <- sample(dLH$ID[dLH$gen==3 & dLH$jch==3],1)
+# IDs of the children of ego's mother
+IDch(IDmother(idego))
+# ID of ego's siblings: children of ego's mother, excluding ego
+IDch(IDmother(idego))[IDch(IDmother(idego))%in%idego==FALSE]
 ```
-
-```
-## alive
-## FALSE  TRUE 
-##  2713   652
-```
-
-```r
-# Age of living mothers at refage of ego
-age_m <- (dLH$ddated[IDmother(idego,dLH)] - dLH$bdated[IDmother(idego,dLH)])[alive]
-mean(age_m)
-```
-
-```
-## [1] 95.84481
-```
-
-```r
-sd(age_m)
-```
-
-```
-## [1] 5.060509
-```
-
-```r
-hist(age_m,main=paste ("Age of living mother at age ",refage," of ego",sep=""),breaks=20,xlab="Age of living mother")
-```
-
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
-
-### Siblings
-
-A combination of basic functions retrieves the IDs of sisters, brothers, aunts, uncles and cousins. Sisters and brothers of ego have the same mother and cousins have the same grandmother. Aunts and uncles are the siblings of ego’s mother and their partners. Consider the individual with idego=27023. The IDs of ego's siblings are retrieved in two steps. First, the IDs of the children of ego's mother are retrieves:
-
-```r
-idego <- 27023
-IDch(IDmother(idego,dLH),dLH)
-```
-
-```
-## [1] 27022 27023 27024 27025 27026
-```
-
-Second the ID of ego is removed. The IDs of ego's siblings are:
-
-```r
-IDch(IDmother(idego,dLH),dLH)[IDch(IDmother(idego,dLH),dLH)%in%idego==FALSE]
-```
-
-```
-## [1] 27022 27024 27025 27026
-```
-
-The code uses subsetting, which is a feature of vectorized operations. Most of the functions in R are vectorized, which means that a function operates on all elements of a vector simultaneously. Vectorized operations prevent the loops that makes R slow^[The simulation of the fertility careers of 50,000 women, their daughters, granddaughters and great-granddaughters takes about 2 minutes on a MacBook.].
 
 Let's considers three unrelated reference persons. The following function call yields the children of the mothers of the reference persons:
-
-```r
-idego <- c(27023,21192,22091)
-IDch(IDmother(idego,dLH),dLH)
-```
-
-```
-## [1] 21192 21193 22091 22092 27022 27023 27024 27025 27026
+```{r}
+idego <- c(2723,2192,2291)
+IDch(IDmother(idego))
 ```
 The siblings of the three unrelated reference persons are:
-
-```r
-IDch(IDmother(idego,dLH),dLH)[IDch(IDmother(idego,dLH),dLH)%in%idego==FALSE]
+```{r}
+IDch(IDmother(idego))[IDch(IDmother(idego))%in%idego==FALSE]
 ```
 
+If two reference persons have the same mother, the approach does not work. Suppose the sister of ID 27023 is included. The siblings produced by the above method the shared siblings only:
+```{r}
+idego <- c(2723,2724,2192,2291)
+IDch(IDmother(idego))[IDch(IDmother(idego))%in%idego==FALSE]
 ```
-## [1] 21193 22092 27022 27024 27025 27026
-```
+In general, if the reference persons include two members of the same family, then the code gives the shared siblings of these two family members. It does not give the siblings for each family member included in the list of reference persons. The reason is that ALL reference persons are excluded from the list of siblings. To obtain a correct result, a list object should be used. The following code produces a list object of four elements, one for each reference person. An element contains the IDs of siblings of one of the reference persons. 
 
-If two reference persons have the same mother, the approach does not work. For instance, 
-
-```r
-idego <- c(27023, 27025,21192,22091)
-IDch(IDmother(idego,dLH),dLH)[IDch(IDmother(idego,dLH),dLH)%in%idego==FALSE]
-```
-
-```
-## [1] 21193 22092 27022 27024 27026
-```
-If the reference persons include two members of the same family, then the code gives the shared siblings of these two family members. It does not give the siblings for each family members included in the list of reference persons. The reason is that reference persons are excluded from the list of siblings. The following code produces a list object of four elements, one for each reference person. A list element shows the IDs of siblings of the reference person. 
-
-
-```r
+```{r}
 f <- function(idego)
-      y <- IDch(IDmother(idego,dLH),dLH)[IDch(IDmother(idego,dLH),dLH)%in%idego==FALSE]
+      y <- IDch(IDmother(idego))[IDch(IDmother(idego))%in%idego==FALSE]
 kk <- list()
 for (i in 1:length(idego))
 { z <- f(idego[i])
   kk[[i]] <- z
 }
+names(kk) <- paste ("Siblings of reference person ",idego[1:length(idego)],sep="")
 kk
-```
-
-```
-## [[1]]
-## [1] 27022 27024 27025 27026
-## 
-## [[2]]
-## [1] 27022 27023 27024 27026
-## 
-## [[3]]
-## [1] 21193
-## 
-## [[4]]
-## [1] 22092
 ```
 Consider all members of the second generation in the virtual population. To retrieve their siblings, the code is
 
-
-```r
+```{r}
 idego <- dLH$ID[dLH$gen==2]
 f <- function(idego)
-      y <- IDch(IDmother(idego,dLH),dLH)[IDch(IDmother(idego,dLH),dLH)%in%idego==FALSE]
+      y <- IDch(IDmother(idego))[IDch(IDmother(idego))%in%idego==FALSE]
 sib <- list()
 for (ego in 1:length(idego))
 { z <- f(idego[ego])
   sib[[ego]] <- z
 }
 ```
-The first member of the second generation has ID $idego[1]$ and the siblings are $sib[[1]]$. The siblings of individual with ID 27023 is
+The first member of the second generation has ID $idego[1]$ and the siblings are $sib[[1]]$. The siblings of individual with ID 10001 are:
 
-
-```r
-sib[[which(idego==10001)]]
+```{r}
+sib[[which(idego==1001)]]
 ```
 
-```
-## [1] 10002 10003 10004 10005 10006
-```
-
-In the virtual population, 14 percent of children in the second generation have no siblings, 37 percent) have 1 brother or sister, 25 percent have 2 siblings and one fourth (23.8 percent) have 3 or more siblings. The code to compute the figures is:
-
-```r
+In the virtual population, 14 percent of children in the second generation have no siblings, 37 percent have 1 brother or sister, 25 percent have 2 siblings and about one fourth (23.8 percent) have 3 or more siblings. The code to compute the figures is:
+```{r}
 z <- sapply(sib,function(x) length(x),simplify=TRUE)
 percentage <- round (100 * table(z)/sum(table(z)),2)
 percentage
-```
-
-```
-## z
-##     0     1     2     3     4     5 
-## 14.23 36.54 25.46 11.54  7.21  5.02
-```
-
-```r
 mean <- mean(z,na.rm=TRUE)
 sd <- sd(z,na.rm=TRUE)
 ```
-The mean number of siblings is 1.7602134 and the standard deviation is 1.3164308. 
+The mean number of siblings is `r round (mean,2)` and the standard deviation is `r round(sd,2)`. 
 
-The age distribution of siblings at age 10 of egos is:
+### Age distribution of siblings
+  
+The age distribution of siblings is determined at a given reference age of egos. Consider members of the second generation at ages 0 and 10. The number of individuals is `r length(idego)`. 
 
-```r
-# Total number of siblings (for all members of pop)
-length(sib)
-```
-
-```
-## [1] 8249
-```
-
-```r
+The code is:
+```{r}
 # Ages of siblings at age 10 of ego
 m <- as.list(idego)
-# Merge two lists
-zz <- Map(c,m,sib)
+# Merge two lists: list of egos and list of siblings of egos
+zz <- base::Map(c,m,sib)
 AgeSib <- function (zz,ageRef)
    { kk <- sapply (zz,function(x) 
       { # ageReference <- 30
@@ -422,9 +374,9 @@ AgeSib <- function (zz,ageRef)
         if (length(x)==1) mage <- NA else
         {
         # Date of birth of ego
-        db_ego <- Db(x[1],dataLH)
+        db_ego <- Db(x[1])
         # Dates of birth of siblings
-        db_sib <- Db(x[2:length(x)],dataLH)
+        db_sib <- Db(x[2:length(x)])
         # Ages of siblings at reference age of ego
         age_sib <- db_ego+ageRef - db_sib
         # Omit negative values (siblings born after refAgeth birthday of ego)
@@ -434,127 +386,128 @@ AgeSib <- function (zz,ageRef)
         }
       })
     return(kk)
-  }
-mage_sib <- AgeSib(zz,ageRef=10)
+   }
+# Age distribution of siblings at age 10 of ego
+mage_sib10 <- AgeSib(zz,ageRef=10)
+# Age distribution of siblings at birth of ego
 mage_sib0 <- AgeSib(zz,ageRef=0)
 ```
-The mean age of siblings at age 10 of ego 10.98 years with a standard deviation of 5.48 years. Note that children without siblings and siblings born after age 10 of ego are not included in the computations. At birth the mean age of siblings is 5.15 years with standard deviation of 3.96 years. The age difference between ego and siblings is highest at birth and declines during the first years of life to reach 0 around age 20. 
 
-A child's perspective on family composition differs significantly from the perspective of parents:
+The age distribution of siblings at birth of ego and the age distribution at age 10 are:
+```{r}
+# par(mfrow=c(2,1))
+# layout(matrix(1:2,nrow=1),widths=lcm(c(7,8)), heights=lcm(c(9,9)))
+layout(matrix(1:2,nrow=1))
+hist(mage_sib0,las=1,main="At birth",xlab="Age of siblings",cex.main=0.9,cex.lab=0.8)
+hist(mage_sib10,las=1,main="At age 10",xlab="Age of siblings",cex.main=0.9,cex.lab=0.8)
+```
 
-```r
+The mean age of siblings at age 10 of ego is `r round (mean(mage_sib10,na.rm=TRUE),2)` years and the standard deviation is `r round(sd(mage_sib10,na.rm=TRUE),2)` years. Note that children without siblings and siblings born after age 10 of ego are not included in the computations. At birth the mean age of siblings is `r round (mean(mage_sib0,na.rm=TRUE),2)` years and the standard deviation is `r round (sd(mage_sib0,na.rm=TRUE),2)` years. The age difference between ego and siblings is highest at birth and declines during the first years of life to reach 0 around age 20. 
+
+### Child's perspective
+
+In the second generation, 25 percent of women remain childless. Of women with children, 32 percent have one child, 40 percent two children and 28 percent three or more children. From a woman's perspective, one out of four have one child. From a mother's perspective, one out of three has 1 child. 
+
+```{r}
+# Select women in generation 2
 id <- dLH$ID[dLH$gen==2 & dLH$sex=="Female"]
 # Proporiton of women by number of children ever born
 z <- table (dLH$nch[idego]) / sum(table (dLH$nch[idego]))
-# Proportion of motherrs by number of children ever born
+# Proportion of mothers by number of children ever born
 zz <- round (100 * table (dLH$nch[idego])[2:6]/sum(table (dLH$nch[idego])[2:6]),2)
 ```
-In the second generation, 25 percent of women remain childless. Of women with children, 32 percent have one child, 40 percent two children and 28 percent three or more children. From a woman's perspective, one out of four have one child. From a mother's perspective, one out of three has 1 child. From a child's perspective, only children represent only 14 percent of all children. Only children are much less common from a child's perspective than from a mother's perspective. 
 
-### Cousins
+A child's perspective on family composition differs significantly from the perspective of parents. From a child's perspective, only children represent only 14 percent of all children (see above).
 
-To obtain the IDs of cousins of ego, we first retrieve the IDs of the grandchildren of ego’s grandmother and then delete ego and ego’s siblings, i.e. the children of ego’s mother. Consider individual with ID 27023. The person's cousins are:
+## Cousins
 
-```r
-idego <- 27023
-idgm <- IDmother(IDmother(idego,dLH),dLH)
-ch <- IDch(IDch(idgm,dLH),dLH)
-idcousins <- ch[ch%in%IDch(IDmother(idego,dLH),dLH)==FALSE]
+To obtain the IDs of cousins of ego, we first retrieve the IDs of the grandchildren of ego’s grandmother and then delete the children of ego’s mother (ego and ego’s siblings). Consider individual with ID 27023. The person's maternal cousins are:
+```{r}
+idego <- 2289
+idgm <- IDmother(IDmother(idego))
+idgch <- IDch(IDch(idgm))
+idcousins <- idgch[idgch%in%IDch(IDmother(idego))==FALSE]
 idcousins
-```
-
-```
-## [1] 30125 30126
 ```
 with idgm the ID of ego’s grandmother and ch the IDs of the grandchildren of idgm. The subsetting deletes the children of ego’s mother. 
 The number of maternal cousins is $length(idcousins)$.
 
-Consider a sample of three members of the third generation. The IDs of their cousins are:
-
-```r
+Consider a random sample of three members of the third generation. The IDs of their maternal cousins are:
+```{r}
 idego <- sample(dLH$ID[dLH$gen==3],3)
-idgm <- IDmother(IDmother(idego,dLH),dLH)
-idcousins <- IDch(IDch(idgm,dLH),dLH)[IDch(idgm,dLH)%in%IDmother(idego,dLH)==FALSE]
+idgm <- IDmother(IDmother(idego))
+idcousins <- IDch(IDch(idgm))[IDch(idgm)%in%IDmother(idego)==FALSE]
 ```
-To get each reference person's cousins, use
 
-```r
-idgm <- IDmother(IDmother(idego,dLH),dLH)
-f <- function(id,idgm,dLH)  
-            { grandch <- IDch(IDch(idgm,dLH),dLH)
-              cous <- grandch[IDmother(grandch,dLH)%in%IDmother(id,dLH)==FALSE]
+If the selected individuals include individuals with the same mother, then the method works too because all siblings are removed. 
+
+To get each reference person's cousins, use a list object:
+```{r}
+idgm <- IDmother(IDmother(idego))
+f <- function(id,idgm)  
+            { grandch <- IDch(IDch(idgm))
+              cous <- grandch[IDmother(grandch)%in%IDmother(id)==FALSE]
             }
-cousins <- list()
+idcousins <- list()
 for (i in 1:length(idego))
-{ z <- f(idego[i],idgm[i],dLH)
-  cousins[[i]] <- z
+{ z <- f(idego[i],idgm[i])
+  idcousins[[i]] <- z
 }
 ```
 
-The code is used to identify the maternal cousins of every member of the third generation:
+$cousins$ gives for each selected ego the IDs of the maternal cousins. 
 
+The maternal cousins of every member of the third generation (6592 memmbers) are (the computations take time):
 
-```r
+```{r}
+# IDs of members of the third generation
 idego <- dLH$ID[dLH$gen==3]
-idgm <- IDmother(IDmother(idego,dLH),dLH)
-cousins <- list()
+# IDs of their grandmothers
+idgm <- IDmother(IDmother(idego))
+# IDs of their cousins
+idcousins <- list()
 for (i in 1:length(idego))
-{ z <- f(idego[i],idgm[i],dLH)
-  cousins[[i]] <- z
+{ z <- f(idego[i],idgm[i])
+  idcousins[[i]] <- z
 }
 ```
-An element $cousins[[i]]$ of the list object $cousins$ gives the IDs of the cousins of ego i. 
+An element $idcousins[[i]]$ of the list object $idcousins$ gives the IDs of the cousins of ego i. 
 
 The frequency distribution of maternal cousins of members of the third generation is 
-
-```r
-z <- sapply(cousins,function(x) length(x),simplify=TRUE)
+```{r}
+z <- sapply(idcousins,function(x) length(x),simplify=TRUE)
 percentage <- round (100 * table(z)/sum(table(z)),2)
 percentage
 ```
 
-```
-## z
-##     0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16 
-## 24.33 12.56 19.01 11.43  9.85  6.31  5.57  3.72  2.35  1.82  1.07  1.12  0.29  0.21  0.20  0.12  0.03
-```
+One of four children has no maternal cousins, while 16.8 percent have 2 cousins. 
 
-One of of four children have no maternal cousins, while one out of five have 2 cousins. 
-
-The frequency distribution of parental cousins is
-
-```r
+The frequency distribution of paternal cousins is:
+```{r}
 idego <- dLH$ID[dLH$gen==3]
-idgm <- IDmother(IDfather(idego,dLH),dLH)
-cousins <- list()
+idgm <- IDmother(IDfather(idego))
+idcousins <- list()
 for (i in 1:length(idego))
-{ z <- f(idego[i],idgm[i],dLH)
-  cousins[[i]] <- z
+{ z <- f(idego[i],idgm[i])
+  idcousins[[i]] <- z
 }
-z <- sapply(cousins,function(x) length(x),simplify=TRUE)
+z <- sapply(idcousins,function(x) length(x),simplify=TRUE)
 percentage <- round (100 * table(z)/sum(table(z)),2)
 percentage
-```
-
-```
-## z
-##     0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16 
-## 25.90 12.40 16.30 13.06  9.58  7.11  5.03  3.50  2.45  1.71  0.92  0.91  0.83  0.15  0.08  0.03  0.03
 ```
 The frequency distribution is similar to that of maternal cousins, as expected because of the significance of random factors in the simulation. 
 
-### Aunts
+## Aunts
 
-Maternal aunts are sisters and sisters-in-law of the reference persons mother. The IDs are obtained in two steps. First, the IDs of the daughters and the IDs of daughters-in-law of ego’s grandmother are determined. Second, the ID of the mother of the reference persons are deleted:
-
-```r
+Maternal aunts are sisters and sisters-in-law of ego's mother. The IDs are obtained in two steps. First, the IDs of daughters and daughters-in-law of ego’s grandmother are determined. Second, the ID of the mother of the reference persons are deleted:
+```{r}
 # ID of grandmother
 idgm <- IDmother(IDmother(idego,dLH),dLH)
 # Function of compute the IDs of grandmother's daughters, their partners, and the IDs of aunts
 f <- function(id,idgm,dLH)  
-            { iddaught <- c(IDch(idgm,dLH)[dLH$sex[IDch(idgm,dLH)]=="Female"],
-              IDpartner(IDch(idgm,dLH)[dLH$sex[IDch(idgm,dLH)]=="Male"],dLH))
-              aunts <- iddaught[iddaught%in%IDmother(id,dLH)==FALSE]
+            { iddaught <- c(IDch(idgm)[dLH$sex[IDch(idgm)]=="Female"],
+              IDpartner(IDch(idgm)[dLH$sex[IDch(idgm)]=="Male"]))
+              aunts <- iddaught[iddaught%in%IDmother(id)==FALSE]
             }
 
 aunts <- list()
@@ -564,89 +517,92 @@ for (i in 1:length(idego))
   aunts[[i]] <- z
 }
 ```
-The frequency distribution of maternal aunts of members of the third generation is 
-
-```r
+Consider as egos the members of the third generation. The frequency distribution of maternal aunts is 
+```{r}
 z <- sapply(aunts,function(x) length(x),simplify=TRUE)
 percentage <- round (100 * table(z)/sum(table(z)),2)
 percentage
 ```
 
-```
-## z
-##     0     1     2     3     4     5 
-## 13.64 37.06 25.04 11.99  7.58  4.69
-```
+Fourteen percent have no aunt, 37 percent have one aunt and 25 percent have two aunts. 
 
-## Grandparenthood
+# Grandparenthood
 
-The ages of women of generation 1 at birth of their children are the dates of birth of their children minus the dates of birth of the mothers:
+When do female members of the first generation become grandparents? It depends on the ages at birth of their children and grandchildren. The ages of women of generation 1 at birth of their children are the dates of birth of their children minus the dates of birth of the women:
 
-
-```r
+```{r}
 idego <- subset (dLH$ID,dLH$gen==1 & dLH$sex=="Female")
-ages <- Db(IDch(idego,dLH),dLH)-Db(IDmother(IDch(idego,dLH),dLH),dLH)
+ages <- Db(IDch(idego))-Db(IDmother(IDch(idego)))
 ```
 
-The mean age is 29.98 years and the standard deviation is 5.99 years. 
+The mean age is `r round (mean(ages),2)` years and the standard deviation is `r round (sd(ages),2)` years. 
 
-The ages of women in the first generation at birth of their grandchildren are the decimal dates of birth of the grandchildren minus the dates of birth of the women:
+The ages of women in the first generation at birth of their grandchildren are the dates of birth of the grandchildren minus the dates of birth of the women:
 
-
-```r
+```{r}
 idego <- dLH$ID[dLH$gen==1 & dLH$sex=="Female"]
-idgch <- IDch(IDch(idego,dLH),dLH)
-ages <- dLH$bdated[idgch] - dLH$bdated[IDmother(IDmother(idgch,dLH),dLH)]
+# IDs of grandchildren
+idgch <- IDch(IDch(idego))
+# Ages if egos at birth of grandchildren
+ages <- Db(idgch) - Db(IDmother(IDmother(idgch)))
 ```
+The mean age of women at birth of grandchildren is `r round(mean(ages),2)` years and the standard deviation is `r round(sd(ages),2)` years.
 
-The age at grandmotherhood is the age at birth of the first grandchild. They are computed in a number of steps:
-
-```r
-#IDs of first grandchildren
-idgch1 <- idgch[dLH$jch[idgch]==1]
+The age at grandmotherhood is the age at birth of the first grandchild. Ages at grandmotherhood are computed in a number of steps:
+```{r}
+# Determine,, for each ego, the ID of grandchildren
+z=IDch(IDch(idego,keep_ego=TRUE),keep_ego=TRUE)
+# IDs of grandchildren
+idgch <- z$Child
 # IDs of the grandmothers
-idgm_gch1 <- IDmother(IDmother(idgch1,dLH),dLH)
-# Dates of birth of first grandchildren
-db_gch1 <- dLH$bdated[idgch1]
-# IDs of grandmothers alive at birth of the first grandchild
-alive <- Dd(idgm_gch1,dLH) > Db(idgch1,dLH)
+idgm_gch <- z$Maternalgm
+# Add dates of birth of grandchildren
+z$db_gch <- Db(idgch)
+# Is grandmother alive at birth of the grandchild?
+z$alive <- Dd(idgm_gch) > Db(idgch)
+# Table of number of grandmother alive (=TRUE) or dead (=FALSE) at birth of grandchildren
+table (z$alive)
 # Age at grandmotherhood 
-agegm_gch1 <- (Db(idgch1,dLH) - Db(idgm_gch1,dLH))[alive]
+zz <- aggregate(z,by=list(z$Maternalgm),function(x) min(x))
+# For each grandmother, the ID of first grandchild is
+idgch1 <- zz$Child
+# The age of grandmother at birth of first grandchild
+agegm_gch1 <- Db(idgch1) - Db(IDmother(IDmother(idgch1)))
+# Grandmother is alive at birth of first grandchild if zz$alive is 1
+table (zz$alive)
 ```
 with alive a logical variable, which is TRUE if a woman is alive and FALSE otherwise. 
 
-The number of first grandchildren to women in the first generation is 6170. The proportion of woman in the first generation becoming a grandmotherhood is 124.1198954 percent. About 5 percent do not survive until the birth of the first grandchild. Of the 6170 women in generation 1 with at least one grandchild, 5702 are alive at birth of their first grandchild. 
+The number of first grandchildren to women in the first generation is `r length(idgch1)`. The proportion of woman in the first generation becoming a grandmother is `r round(100 * length(idgch1)/length(idego),2)` percent. Of the `r length(idgch1)` women in generation 1 with at least one grandchild, `r length(alive[alive==TRUE])` are alive at birth of their first grandchild. 
 
-The average age at grandmotherhood is 58.04 years and the standard deviation is 8.45 years. The age distributions at grandmotherhood is shown in the next figure. The figure also shows the ages at motherhood. 
+The average age at grandmotherhood is `r round (mean(agegm_gch1),2)` years and the standard deviation is `r round(sd(agegm_gch1),2)` years. The age distributions at grandmotherhood is shown in the next figure. The figure also shows the ages at motherhood. 
 
-
-```r
+```{r}
 # ID of females in first generation with children
 idego <- dLH$ID[dLH$gen==1 & dLH$sex=="Female" & dLH$nch>=1]
 # ID of first child
-idch <- IDch(idego,dLH)  
+idch <- IDch(idego)  
 idch1 <- idch[dLH$jch[idch]==1]
 # ID of first grandchild
-idgch <- IDch(IDch(idego,dLH),dLH)
-zz <- data.frame(id=IDmother(IDmother(idgch,dLH),dLH),idgch=idgch)
+idgch <- IDch(IDch(idego))
+zz <- data.frame(id=IDmother(IDmother(idgch)),idgch=idgch)
 idgch1 <- aggregate(zz,by=list(zz$id),function(x) min(x))
 # Create data frame with ID of mother, ID of first child and ID of first grandchild
 d <- data.frame(idego=idego,idch1=idch1)
 d$idgch1 <- NA
 d$idgch1[idego%in%idgch1$id] <- idgch1$idgch
 # Add age of ego at birth of first child
-d$agem_ch1 <- Db(d$idch1,dLH) - Db(IDmother(d$idch1,dLH),dLH)
+d$agem_ch1 <- Db(d$idch1) - Db(IDmother(d$idch1))
 # Add age of ego at birth of first grandchild
 d$agegm_gch1 <- NA
-z1<- Db(d$idgch1,dLH)[!is.na(d$idgch1)]  
-z2 <- Db(IDmother(IDmother(d$idgch1,dLH),dLH),dLH)
+z1<- Db(d$idgch1)[!is.na(d$idgch1)]  
+z2 <- Db(IDmother(IDmother(d$idgch1)))
 z3 <- z2[!is.na(d$idgch1)]
 d$agegm_gch1[!is.na(d$idgch1)]  <- z1-z3
 ```
 
 
-
-```r
+```{r fig1, fig.height = 3, fig.width = 5,fig.align = "center"}
 colnames(d)[4:5] <- c("Motherhood","Grandmotherhood")
 Plot_agesgm <- function (agem_ch1,agegm_gch1)
 { # Age of mother and grandmother at birth of child
@@ -673,35 +629,19 @@ Plot_agesgm <- function (agem_ch1,agegm_gch1)
 Plot_agesgm(agem_ch1,agegm_gch1)
 ```
 
-<img src="figure/fig1-1.png" title="plot of chunk fig1" alt="plot of chunk fig1" style="display: block; margin: auto;" />
-
 The duration of grandmotherhood is 
-
-```r
-yrs_gm <- (Dd(idgm_gch1,dLH)-Db(idgm_gch1,dLH))[alive]-agegm_gch1
+```{r}
+yrs_gm <- ((Dd(d$idego)-Db(d$idego))-d$agegm_gch1)[!is.na(d$agegm_gch1)]
 ```
-The mean number is 27.3896584 years and the standard deviation 12.660375 years. 
+The mean duration is `r round (mean(yrs_gm,na.rm=TRUE),2)` years and the standard deviation `r round(sd(yrs_gm,na.rm=TRUE),2)` years. 
 
-The percentage of children in generation 3 with grandparents alive at time of birth is:
-
-```r
-idego <- dLH$ID[dLH$gen==3]
-ngch3 <- length(idego[Dd(idgm,dLH)>=Db(idego,dLH)])
-round (100*ngch3/length(idego),2)
-```
-
-```
-## [1] 91.72
-```
-
-The following figure shows the ages of mothers and grandmothers at birth of a child or grandchild.
-
-```r
+The following figure shows the ages of mothers and grandmothers at birth of a child or grandchild for all children (not only first children).
+```{r fig2, fig.height = 3, fig.width = 5,fig.align = "center",warning=FALSE}
 Plot_agesgm2 <- function (dLH)
 { # Age of mother and grandmother at birth of child
   id_ego <- dLH$ID
-  agem <- dLH$bdated[id_ego]-dLH$bdated[IDmother(id_ego,dLH)]
-  agegm <- dLH$bdated[id_ego]-dLH$bdated[IDmother(IDmother(id_ego,dLH),dLH)]
+  agem <- dLH$bdated[id_ego]-dLH$bdated[IDmother(id_ego)]
+  agegm <- dLH$bdated[id_ego]-dLH$bdated[IDmother(IDmother(id_ego))]
   d <- data.frame(id_ego=id_ego,mother=agem,grandmother=agegm)
   dd <- reshape::melt.data.frame(d,id.vars="id_ego",measure.vars=c("mother","grandmother"))
   colnames(dd)[2] <- "Age"
@@ -722,125 +662,161 @@ Plot_agesgm2 <- function (dLH)
 Plot_agesgm2 (dLH)
 ```
 
-<img src="figure/fig2-1.png" title="plot of chunk fig2" alt="plot of chunk fig2" style="display: block; margin: auto;" />
+Let's now adopt the perspective of children on grandparenthood. The percentage of children in generation 3 with grandmother alive at time of birth is:
+```{r}
+idego <- dLH$ID[dLH$gen==3]
+# Grandmother of idego
+idgm <- IDmother(IDmother(idego))
+# Number of grandmothers alive at birth of egos
+ngch3 <- length(idego[Dd(idgm)>=Db(idego)])
+# Proportion
+round (100*ngch3/length(idego),2)
+```
 
+For a child (reference person) to be able to celebrate a grandother's birthday, 85th birthday say, both the reference person and the grandmother should be alive. First consider a single member of the 3th generation. The entire third generation is considered next. Suppose ego is selected at random from the members of the third generation:
 
-What proportion of members of the third generation are able to celebrate the 85th birthday of their grandmother? To celebrate the 85th birthday, reference persons and grandmothers should be alive. First consider a single member of the 3th generation, selected at random,
-
-
-```r
+```{r}
 idego <- sample (dLH$ID[dLH$gen==3],1)
 ```
 The grandmother of ego is 
-
-```r
-idgm <- IDmother(IDmother(idego,dLH),dLH)
+```{r}
+idgm <- IDmother(IDmother(idego))
 ```
-The grandmother is alive at age 85 if the date of birth of the grandmother is larger that the date of birth of ego plus 85. The age of ego at the 85th birthday of the grandmother if alive is the decimal date of death of the grandmother minus the date of birth of the grandchild plus 85. 
+The grandmother is alive at age 85 if the date of birth of the grandmother is larger that the date of birth of ego plus 85. 
+```{r}
+alive85 <- Dd(idgm)>=Db(idgm)+85 
+```
+$alive85$ is a logical variable. It is true if the grandmother is alive and false if the grandmother is not alive at birth of ego. 
 
-```r
-alive85 <- Dd(idgm,dLH)>=Db(idgm,dLH)+85 
-# alive85 is a logical variable: true or false 
+The age of ego at the 85th birthday of the grandmother if alive is the decimal date of death of the grandmother minus the date of birth of the grandchild plus 85:
+```{r}
 agegch85 <- NA
-agegch85[alive85] <- (Db(idgm,dLH)+85-Db(idego,dLH))[alive85]
+agegch85[alive85] <- (Db(idgm)+85-Db(idego))[alive85]
 ```
-If the grandmother is alive at age 85, $agegch85$ gives the age of the grandchild. If the grandmother is not alive at 85, $agegch85=NA$. 
+If the grandmother is alive at age 85, $agegch85$ gives the age of the grandchild at the 85th birthday of the grandmother. If the grandmother is not alive at 85, $agegch85=NA$. 
 
-The IDs of members of the third generation at the 85th birthday of their living grandmothers is idgch:
-
-```r
+The IDs of members of the third generation able to celebrate the 85th birthday of their living grandmother are:
+```{r}
+# IDs of members of third generation
 idego <- dLH$ID[dLH$gen==3]
-idgm <- IDmother(IDmother(idego,dLH),dLH)
-alive <- Dd(idgm,dLH)>=Db(idgm,dLH)+85
+# IDs of their grandmothers
+idgm <- IDmother(IDmother(idego))
+# Is grandmother alive at 85?
+alive <- Dd(idgm)>=Db(idgm)+85
+# IDs of egos with living grandmother aged 85
 idego85 <- idego[alive]
 ```
+In the virtual population, `r round (100*length(idgm[alive])/length(idgm),2)` percent of the individuals are able to celebrate the 85th birthday of their grandmother. 
 
-The ages of these egos (grandchildren) are
+The ages of these grandchildren at the 85th birthday of their grandmothers are:
+```{r}
+agegch85 <- Db(idgm[alive],dLH)+85-Db(idego85,dLH)
+```
+The mean age is `r round(mean(agegch85),2)` years and the standard deviation is `r round(sd(agegch85),2)` years. The proportion of grandchildren younger than 15 at grandmother's 85th birthday is `r round(100*length(agegch85[agegch85<15])/length(agegch85),2)` percent.  
 
+The age of ego (grandchild) at grandmother’s death is computed in two steps. First, the age of grandmother at death is computed: 
 
-```r
-agegch <- Db(idgm[alive],dLH)+85-Db(idego85,dLH)
+```{r}
+agesgmd <- Dd(unique(idgm))-Db(unique(idgm))
 ```
 
-In the virtual population, 52.09 percent of the individuals are able to celebrate the 85th birthday of their grandmother.  It is also the proportion of grandmothers alive at 85. The mean age of grandchildren at their grandmother’s 85th birthday is 25.0531663 years with standard deviation of 8.4032589 years. 11.42 percent of the grandchildren are younger than 15 years. 
+Next, the age of ego at that event is computed:
 
-The age of a grandchil at grandmother’s death is computes in two steps. First, the age of grandmother at death is computed: 
+```{r}
+agesgchd <- Dd(IDmother(IDmother(idego)))-Db(idego)
+```
+The mean  age is `r round(mean(agesgchd),2)` and the standard deviation is `r round(sd(agesgchd),2)`. The figures depend on (a) the mean lifespan of women of the first generation who ever become a grandmother, (b) the mean age at childbearing of the women in the second generation with at least one child, and (c) the mean age at childbearing of women in the first generation with at least one child.
 
+# Double burden: young children and aging parent
 
-```r
-agesgmd <- Dd(unique(idgm),dLH)-Db(unique(idgm),dLH)
+Mothers with young children (less than 15) and at least one elderly parent (over 85) have a double burden, i.e. care for a young child and an elderly parent. Suppose the elderly parent is female. To determine the IDs of women with a double burden, we may adopt the woman's perspective or the child's perspective. A child aged less than 15 with a living mother and a living grandmother of 85 or older has a mother with a double burden. The IDs of mothers of children aged less than 15 and with a grandmother over 85 are:
+
+```{r}
+iddb <-  unique(IDmother(idego85[agegch85<15]))
+```
+with $idego85$ the IDs of children with a grandmother of 85 or older and $idego85[<15]$ the IDs of those younger than 15. 
+
+The number of women of the second generation who experience a double burden during their lifetime is `r length(iddb)`,which is `r round (100*length(iddb)/length(dLH$ID[dLH$gen==2 & dLH$sex=="Female"]),2)` percent of the women of the second generation. 
+
+The number of years a mother experiences a double burden (from a child's perspective) is the number of years the grandmother lives beyond age 85 and the child is less than 15. 
+a mother aged 85+ is the date of death of the egos' mothers minus the date of the 85th birthday of the mother
+
+```{r}
+# IDs of mothers with double burden: iddb
+# IDs of egos with mother who experiences double burden somewhere during her lifetime
+idego_db <- IDch(iddb)
+# Date of death of grandmother of ego with grandmother of 85+
+dgmd <- Dd(IDmother(IDmother(idego_db)))
+# 85th birthday of grandmother
+dgm85 <- Db(IDmother(IDmother(idego_db))) + 85
+# Date of birth of ego
+dego0 <- Db(idego_db)
+# 15th birthday of ego, assuming ego is alive at 15
+dego15 <- Db(idego_db) + 15 
+# Length of episodes during which a child experiences a mother with double burden
+period_db <- pmin(dgmd,dego15) - pmax(dgm85,dego0) 
+period_db[period_db<=0] <- NA
+# Mean length of episode during which child has mother with double burden
+mean(period_db,na.rm=TRUE)
+# Number of children with a mother going through episode of double burden
+length(period_db[!is.na(period_db)])
+# Women who ever experience a double burden have a total number of children of: length(idego_db)
+# Some of these children contribute to the bouble burden, other do not
+# ID is childen who contribute to mother's double burden
+idego_db2 <- idego_db[!is.na(period_db)]
+# ID of children with mothers with double burden who do not contribute to double burden
+idego_db3 <- idego_db[is.na(period_db)]
+# IDs of women with double burden and IDs of children contributing to double burden
+idmch_db <- cbind (IDmother(idego_db2),idego_db2)
+# Number of children contributing to double burden for each women with double burden
+z <- aggregate(idmch_db,list(IDmother(idego_db2)),function(x) length(x))
+addmargins(table (z[,3]))
+# IDs of women with highest number of children contributing to double burden
+idm_max <- z$Group.1[z$V1==max(z$V1)]
 ```
 
-Next, the age of grandchildren at that event are computed:
+A child who experiences an episode during which the mother has a double burden, has that experience for `r round (mean(period_db,na.rm=TRUE),2)` years on average. The standard deviation is `r round (sd(period_db,na.rm=TRUE),2)` years. 
 
-
-```r
-agesgchd <- Dd(IDmother(IDmother(idego,dLH),dLH),dLH)-Db(idego,dLH)
-```
-The mean  age is 23.26 and the standard deviation is 15.86.
-
-## Double burden: young children and aging parent
-
-Mothers with young children (less than 15) and at least one elderly grandparent (over 85) have a double burden, i.e. care for a young child and an elderly parent. Suppose the elderly parent is female. The IDs of these mothers with a double burden are
-
-
-```r
-iddb <-  unique(IDmother(idego85[agegch<15],dLH))
-```
-
-0.05 percent of the women of the third generation with children under 15 experience a double burden during their lifetime. 
-
-The number of years with a mother aged 85+ the date of death of the egos' mothers minus the date of the 85th birthday of the mother
-
-
-```r
-agemd <- dLH$ddated[IDmother(idego85,dLH)] -Db(idego85,dLH)
-agem85 <- dLH$bdated[IDmother(idego85,dLH)] + 85 - Db(idego85,dLH)
-nyrs85 <- agemd - agem85
-nyrs85[nyrs85<0] <- NA
-```
-
-The mean number of years is 7.6 and the standard deviation is 4.92. 
-
-Note that the number of years with a mother aged 85 and over may also be computed by as the mother's remaining number of years at age 85:
-
-```r
-z <-  dLH$ddated[IDmother(idego85,dLH)] - (dLH$bdated[IDmother(idego85,dLH)] + 85)
-nyrs85 <- z[z>0]
-```
-
-The number of years with a child below 15 is the date of birth of the youngest child plus 15 (provided the child survives until age 15).
-
-Alburez et al. (2021) consider individuals with at least one child aged 15 or younger and a parent or parent in-law within 5 years of death to be sandwiched. Applying this criterion, the following code computes the proportion of women with a double burden at some time during their lives:
-
-```r
-# ID of individuals in generation 3
+Alburez et al. (2021) consider individuals with at least one child aged 15 or younger and a parent or parent in-law within 5 years of death to be sandwiched. Applying that criterion, the following code computes the proportion of women with a double burden at some time during their lives:
+```{r}
+# ID of individuals in generation 3 (children)
 idego <- dLH$ID[dLH$gen==3]
 # Ages of grandchildren five years prior to death of maternal grandmother
-agegch5 <- Dd(IDmother(IDmother(idego,dLH),dLH),dLH)-5-Db(idego,dLH)
+agegch5 <- Dd(IDmother(IDmother(idego)))-5-Db(idego)
 # Is grandchild less than 15 five years prior to death of maternal grandmother?
 chless15 <- agegch5<15 # Logical variable: true or false
 # Number of grandchildren less than 15 five years prior to death of mother
 table (chless15)
-```
-
-```
-## chless15
-## FALSE  TRUE 
-##  4179  2427
-```
-
-```r
 # The mothers of these grandchildren have some episode of double burden
-idmAll <-  unique(IDmother(idego,dLH))
-idmdb <- unique(IDmother(idego[chless15],dLH)) # 396 mothers with 621 children < 15
+idmAll <-  unique(IDmother(idego))
+idmdb <- unique(IDmother(idego[chless15])) # 396 mothers with 621 children < 15
 # Proportion of women in generation 2 with double burden
 z <- round (100*length(idmdb)/length(idmAll),2)  
 ```
-Of the women in generation 2, 45.8 percent experience an episode of double burden. It is the size of "sandwich generation". 
+Of the women in generation 2 with children, `r z` percent experience an episode of double burden. It is the size of "sandwich generation". 
 
+# The fertility table: multistate life table 
 
-## References
+The fertility table consists of *expected values* of fertility indicators computed from conditional fertility rates (occurrence-exposure rates). The fertility indicators are:
+
+* Multistate survival function (S): state occupation probabilities predicted from empirical transition rates. A state probability is the probability that an individual is in a given state at age x. It depends on (a), survival and (b) being in a state conditional on survival. 
+* Transition probabilities (P): probabilities that an individual in a given state at age x is in a given other state at age x+1.
+* Expected state occupation times(L): expected time spent in a given state (expected sojourn time) between ages x and x+1. Expected state occupation times may be conditional on the state occupied at age x, conditional on survival but not on the state occupied at x, or unconditional on survival and state occupied at x. The first measure is "status-based", the second and third measures are is "population-based". 
+* Expected state occupation times beyond a given age
+    - Expected state occupation times at birth (e0).
+    - Expected state occupation times at age x, by status occupied at age x 
+    - Expected state occupation times at age x, irrespective of state occupied at x.
+
+For the methodology of multistate life table construction, see the vignette *Simulation of life histories* included in the 'VirtualPop' package and @willekens2014. A fertility table is an illustration of the hierarchical multistate model, characterized by having r living states connected by r-1 rates of transition [@schoen2016hierarchical;@schoen2019analytical].
+
+The expected state occupation times at birth are
+```{r}
+z <- Multistate(rates)$mslt$e0[,1]
+round(z,2)
+```
+A newborn girl (in generation 1) may expect to spend 33.6 years before entering motherhood. The figure is higher than the age at motherhood for those entering motherhood because a considerable proportion of the cohort never enters motherhood (and remain childless throughout the reproductive period). Women with one child spend an average of 7.4 years with one child before death or the end of the reproductive period, whatever comes first. Note that the sum of the lengths of episodes is less than 55, the end of the reproductive period, because of death before age 55. 
+
+# References
 
 
 
