@@ -1,3 +1,23 @@
+#' Multistate life table
+#' 
+#' Computes fertility table by birth order
+#' 
+#' 
+#' @param rates rates by age and sex and birth rates by age and birth order (or parity)
+#' @param mortality Indicator variable. Mortality accounted for if mortality=1, else mortality omitted.
+#' @return A list of two objects: 
+#' item{S}{the multistate survival function (S) and multistate transition probabilities (P)}
+#' item{mslt}{other measures of the multistate life table: person-years (L); expectation at birth of sojourn times in the various states (e0); expectation at age x of the remaining expected sojourn times in the various states: population-based measures (e.p); expectation at age x of the remaining expected sojourn times in the various states: status-based measures (e.p)} 
+#' @details
+#' The multistate life table is computed using the functions MSLT.S and MLST.e from the Biograph package. The two functions are included in the Multistate function as MSLT_S and MSLT_e.
+#' @author Frans Willekens
+#' @examples
+#' 
+#' data(rates,package = "Families")
+#' z=Multistate(rates)
+#' 
+#' @export Multistate
+
 Multistate <- function (rates,mortality=1)
 {
 

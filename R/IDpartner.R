@@ -6,59 +6,61 @@
 #' 
 #' @param idego vector of ID of egos. If idego is missing, then the function
 #' allocates partners (from opposite sex) to egos. The allocation is random.
-#' @param dataLH Database. If missing, database 'datap' is used.
+#' @param dLH Name of database. If missing, dataLH_F is used.
 #' @return IDs of partners. If the argument idego is missing, then a data frame
-#' similar to 'dataLH' is returned with IDs of partners completed.
+#' similar to 'dLH' is returned with IDs of partners completed.
 #' @author Frans Willekens
 #' @examples
 #' 
-#' data(dataLH)
-#' IDpartner(idego=1,dataLH)
+#' data(dataLH_F,package = "Families")
+#' IDpartner(idego=1)
 #' # Allocate partner to egos with ID 4,9,30.
-#' IDpartner(idego=dataLH$ID[c(4,9,30)],dataLH)  
+#' IDpartner(idego=dataLH_F$ID[c(4,9,30)])  
 #' 
 #' @export IDpartner
 IDpartner <-
-function(idego=NULL,dataLH)
-{  # Two uses
-  # print (idego)
-   #  if id=NULL: IDpartner of all egos determined and stored in IDpartner column of dataLH (datag)
+function(idego,dLH)
+{if (missing(dLH)) 
+   {  dLH <- Families::dataLH_F
+   } 
+    # Two uses
+   #  if id=NULL: IDpartner of all egos determined and stored in IDpartner column of dLH (datag)
    # if id=idego: IDpartner (column in datag must exist)
 
-if (is.null(idego)) # Allocate partners
-{ if (max(dataLH$gen) - min (dataLH$gen) > 0)  
-       { print ("Partners already allocated")
-         return (dataLH)}
-nf <- length(dataLH$ID[dataLH$sex=="Female" & is.na(dataLH$IDpartner)])
-nm <- length(dataLH$ID[dataLH$sex=="Male" & is.na(dataLH$IDpartner)])
+if (missing(idego)) # Allocate partners
+{ if (max(dLH$gen) - min (dLH$gen) > 0)  
+       { message ("Partners already allocated")
+         return (dLH)}
+nf <- length(dLH$ID[dLH$sex=="Female" & is.na(dLH$IDpartner)])
+nm <- length(dLH$ID[dLH$sex=="Male" & is.na(dLH$IDpartner)])
 # Number of females  may exceed number of males
 nsample <- min(nf,nm)
 if (nsample==0) 
-       { print ("Partners already allocated")
-         return (dataLH)}
-print (paste("nsample =",c(nsample,nm,nf)))
+       { message ("Partners already allocated")
+         return (dLH)}
+#  message (paste("nsample =",c(nsample,nm,nf)))
 if (nsample < nf)
-{id <- sample(dataLH$ID[dataLH$sex=="Female" & is.na(dataLH$IDpartner)],nsample,replace=FALSE)
- dataLH$IDpartner[dataLH$sex=="Male" & is.na(dataLH$IDpartner)] <- id 
- xx <- subset (dataLH$ID,dataLH$sex=="Male" & !is.na(dataLH$IDpartner))
+{id <- sample(dLH$ID[dLH$sex=="Female" & is.na(dLH$IDpartner)],nsample,replace=FALSE)
+ dLH$IDpartner[dLH$sex=="Male" & is.na(dLH$IDpartner)] <- id 
+ xx <- subset (dLH$ID,dLH$sex=="Male" & !is.na(dLH$IDpartner))
  partners <- cbind (female=id,male=xx)
 } else
-{id <- sample(dataLH$ID[dataLH$sex=="Male" & is.na(dataLH$IDpartner)],nsample,replace=FALSE)
- dataLH$IDpartner[dataLH$sex=="Female" & is.na(dataLH$IDpartner)] <- id 
- xx <- subset (dataLH$ID,dataLH$sex=="Female" & !is.na(dataLH$IDpartner))
+{id <- sample(dLH$ID[dLH$sex=="Male" & is.na(dLH$IDpartner)],nsample,replace=FALSE)
+ dLH$IDpartner[dLH$sex=="Female" & is.na(dLH$IDpartner)] <- id 
+ xx <- subset (dLH$ID,dLH$sex=="Female" & !is.na(dLH$IDpartner))
  partners <- cbind (male=id,female=xx)}
 
 for (i in 1:nrow(partners))
-{ dataLH$IDpartner[dataLH$ID==partners[i,1]] <-partners[i,2]
+{ dLH$IDpartner[dLH$ID==partners[i,1]] <-partners[i,2]
 }
-which (dataLH$sex=="Female" & is.na(dataLH$IDpartner))
-which (dataLH$sex=="Male" & is.na(dataLH$IDpartner))
+which (dLH$sex=="Female" & is.na(dLH$IDpartner))
+which (dLH$sex=="Male" & is.na(dLH$IDpartner))
 } # end if is.null
 if (!is.null(idego)) # Get ID of partner
-{ idPartner <- dataLH$IDpartner[idego]
- # dataLH <-idPartner
+{ idPartner <- dLH$IDpartner[idego]
+ # dLH <-idPartner
 }
-if (!is.null(idego)) dataLH <- idPartner
+if (!is.null(idego)) dLH <- idPartner
 
-return (dataLH)
+return (dLH)
 }

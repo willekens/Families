@@ -3,79 +3,71 @@
 #' Retrieves ID of children of ego or children of vector of egos
 #' 
 #' 
-#' @param id ID of ego(s)
-#' @param dataLH Database.
+#' @param idego ID of ego(s)
+#' @param dLH Name of database. If dLH is missing, dataLH_F is used.
 #' @param keep_ego Option to link show ID of ego together with ID of mother
-#' @return ID of children or (if keep_ego=TRUE, data frame with ID of ego and
-#' ID of children). If ego has no children or IDs of children are not included
-#' in database, numeric(0) is returned and the message "No (grand)children of
-#' ego in database". If keep_ego=TRUE, an data frame is returned with the
+#' @return ID of children. If ego has no children or IDs of children are not included
+#' in database, numeric(0) is returned. If keep_ego=TRUE, a data frame is returned with the
 #' following columns: IDego, ID of mother of children, ID of father of
-#' children, ID of children, character sequence denoting the sex of parent and
-#' sex of child.
+#' children, ID of children, sex of children. 
 #' @author Frans Willekens
 #' @examples
 #' 
-#' data(dataLH)
-#' IDch(1,dataLH)
-#' IDch(sample (dataLH$ID,10),dataLH,keep_ego=TRUE)
+#' data(dataLH_F,package = "Families")
+#' IDch(idego=1)
+#' id <- sample (dataLH_F$ID[dataLH_F$gen==1],10)
+#' IDch(idego=sort(id),keep_ego=TRUE)
 #' 
 #' @export IDch
 IDch <-
-function (id,dataLH,keep_ego=FALSE)
-{ # test: run first id=IDmother(10020,child=1) => is data frame
-  # mother = 1: include info on mother
-  # ego=1 : include ego (and siblings) in list of children
-# id=id of ego
-# If id is data frame created by IDch, first col is ID of grandmother and second col is ID of mother
-
- #  utils::globalVariables("dataLH")
-if (any(is.na(id))) return (NA)
-
-if (is.data.frame(id)==FALSE)
-  { idchm <- dataLH$ID[dataLH$IDmother%in%id]
-    dataLH$IDfather <- IDpartner(dataLH$IDmother,dataLH) 
-    idchf <- dataLH$ID[dataLH$IDfather%in%id]
-    idch <- idch2 <- c(idchm,idchf)
-  }
-if (length(idch)==0) 
+function (idego,dLH,keep_ego=FALSE)
+{
+# idego is a vector of identification numbers (IDs); get the vector of IDs of children
+# ================   determine database   ================
+# utils::globalVariables("dLH") 
+if (missing(dLH)) 
+   {  dLH <- Families::dataLH_F
+   } 
+# ===============  Check idego   ================
+# If idego is missing or idego is NA, skip
+if (any(is.na(idego))) return (NA)
+if (length(idego)==0) 
       { idch2 <-  NA
         return (idch2)
       }
-if (is.data.frame(id)) 
-   {  idgch <- IDgch(unique(id$IDego),dataLH,keep_ego=TRUE)
-      if (keep_ego==FALSE)
-        { idgch <- idgch$grandchild  }
-      return (idgch)
-   }
-if (is.data.frame(id)==FALSE & keep_ego==TRUE)
-  { # sex of ego
-       # ego is female
-    idchm <- IDch(id[dataLH$sex[id]=="Female"],dataLH)
-           # mother is IDmother(idchm)
-      # ego is male
-    k <- which (dataLH$sex[id]=="Male")
-    idchf <- IDch(id[k],dataLH)
-           # father is IDfather(idchf)
-    
-    if (all(is.na(idchf))) idchf <- numeric(0) 
-    idego2 <- c(IDmother(idchm,dataLH),idchf)
-    idego2 <- stats::na.omit(idego2)
-    idchTab <- data.frame (IDego=idego2,IDmother=IDmother(idch,dataLH),IDfather=IDpartner(IDmother(idch,dataLH),dataLH),
-          IDch=idch)
-  # idchTab$sch <- NA
-  # idchTab$sch[IDmother(idch)%in%id]  <- "F"
-  # idchTab$sch[IDfather(idch)%in%id]  <- "M"
-    # =========  Sequence  =============
-    nam <- c("M","F")
-    sego <- as.numeric(dataLH$sex[idchTab$IDego])
-    z <- data.frame(a=nam[sego],c=nam[as.numeric(dataLH$sex[idch])])
-    zz <- apply(z,1,function(x) paste(x,collapse="") )
-    idchTab$sch <- NULL
-   idchTab$path=zz
-    idch2 <- noquote(idchTab)
-  }
- # if (length(idch2)==0) return("Children of idego not in database")
- if (length(idch2)==0) print ("No (grand)children of ego in database")
+
+dframe <- FALSE
+if (is.data.frame(idego))   
+       { dframe <- TRUE
+         idego_dframe <- idego
+         idego <- idego_dframe$Child
+       }
+
+idch <- dLH$ID[dLH$IDmother%in%idego | dLH$IDpartner[dLH$IDmother]%in%idego]
+
+if (keep_ego==FALSE)
+     { idch2 <- idch
+     }  else
+{jj <- dLH$IDmother[idch]%in%idego
+ z <- data.frame(ego_is_mother=jj,Mother=dLH$IDmother[idch],Father=dLH$IDpartner[dLH$IDmother[idch]], Child=idch)
+ k <- dLH$IDmother[idch][dLH$IDmother[idch]%in%idego]
+ # sex of individuals
+ nam <- c("M","F")
+ sexch <- nam[as.numeric(dLH$sex[idch])]
+ z$sexego <- NA
+ z$sexego[jj] <- nam[2]
+ z$sexego[jj==FALSE] <- nam[1]
+ # sex of children
+ z$sex_child <- sexch   
+ idch2 <- z 
+} 
+if (dframe & keep_ego)
+{ zz <- z
+  zz$Maternalgm <- dLH$IDmother[zz$Mother]
+  zz$Maternalgf <- dLH$IDpartner[dLH$IDmother[zz$Mother]]
+  zz$Paternalgm <- dLH$IDmother[zz$Father]
+  zz$Paternalgf <- dLH$IDpartner[dLH$IDmother[zz$Father]]
+  idch2 <- zz
+}
  return (idch2)
 }
