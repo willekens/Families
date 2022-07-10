@@ -4,7 +4,6 @@
   [![CRAN status](https://www.r-pkg.org/badges/version/Families)](https://CRAN.R-project.org/package=Families)
   [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#stablel)
   [![CircleCI build status](https://img.shields.io/circleci/build/github/jupyterhub/jupyterhub?logo=circleci)](https://circleci.com/gh/jupyterhub/jupyterhub)
-  [![Github all releases](https://img.shields.io/github/downloads/Naereen/StrapDown.js/total.svg)](https://GitHub.com/Naereen/StrapDown.js/releases/)
 <!-- badges: end -->
 
 *Families* identifies family and kin relationships in a virtual population
