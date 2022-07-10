@@ -1,6 +1,6 @@
   <!-- badges: start -->
   [![General badge](https://img.shields.io/badge/Field-Demography-red.svg)](https://shields.io/)
-  [![Generic badge](https://img.shields.io/badge/DATA-HMD/HFD-yellow.svg)](https://shields.io/)
+  [![Generic badge](https://img.shields.io/badge/DATA-HMD/HFD-blue.svg)](https://shields.io/)
   [![CRAN status](https://www.r-pkg.org/badges/version/Families)](https://CRAN.R-project.org/package=Families)
   [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#stablel)
   [![CircleCI build status](https://img.shields.io/circleci/build/github/jupyterhub/jupyterhub?logo=circleci)](https://circleci.com/gh/jupyterhub/jupyterhub)
