@@ -20,7 +20,7 @@ social (family) networks and to adopt different perspectives on
 population, including the perspective of a child or an elderly person.
 The vignette *F**a**m**i**l**i**e**s*\_*V**i**r**t**u**a**l* describes
 the package and illustrates its use. HTML and pdf versions of the
-vignette are in folder *F**a**m**i**l**i**e**s*/*d**o**c*.
+vignette are in folder *Families/doc*.
 
 You should be able to install VirtualPop using the following R code:
 
