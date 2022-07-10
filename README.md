@@ -18,7 +18,7 @@ of death, and IDs of partner, mother, father and children.
 The multi-generation virtual population offers opportunities to map
 social (family) networks and to adopt different perspectives on
 population, including the perspective of a child or an elderly person.
-The vignette *F**a**m**i**l**i**e**s*\_*V**i**r**t**u**a**l* describes
+The vignette *Families\_Virtual* describes
 the package and illustrates its use. HTML and pdf versions of the
 vignette are in folder *Families/doc*.
 
