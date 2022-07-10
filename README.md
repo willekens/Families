@@ -1,5 +1,6 @@
   <!-- badges: start -->
   [![CRAN status](https://www.r-pkg.org/badges/version/Families)](https://CRAN.R-project.org/package=Families)
+  [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
   <!-- badges: end -->
 
 *Families* identifies family and kin relationships in a virtual population
