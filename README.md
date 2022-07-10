@@ -1,6 +1,6 @@
   <!-- badges: start -->
   [![CRAN status](https://www.r-pkg.org/badges/version/Families)](https://CRAN.R-project.org/package=Families)
-  [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+  [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
   [![General badge](https://img.shields.io/badge/Demography-virtual-red.svg)](https://shields.io/)
   [![CircleCI build status](https://img.shields.io/circleci/build/github/jupyterhub/jupyterhub?logo=circleci)](https://circleci.com/gh/jupyterhub/jupyterhub)
 <!-- badges: end -->
