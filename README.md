@@ -6,7 +6,6 @@
   [![General badge](https://img.shields.io/badge/Published_on_CRAN-July_8_2022-red.svg)](https://shields.io/)
   [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#stablel)
   [![CircleCI build status](https://img.shields.io/circleci/build/github/jupyterhub/jupyterhub?logo=circleci)](https://circleci.com/gh/jupyterhub/jupyterhub)
-  [![](http://cranlogs.r-pkg.org/badges/last-month/Families?color=blue)](https://cran.r-project.org/package=Families)
   [![](http://cranlogs.r-pkg.org/badges/grand-total/Families?color=blue)](https://cran.r-project.org/package=Families)
 <!-- badges: end -->
 
