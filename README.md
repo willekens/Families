@@ -31,5 +31,6 @@ To install the package from CRAN, type in the R window:
         install.packages ("Families")
 
 To install the package from GitHub, use:
+
         library(devtools)
         devtools::install_github("willekens/Families")
